@@ -4,6 +4,7 @@ import { readPinnedImage } from "./image.ts";
 import { templateInputs } from "./inputs.ts";
 
 const data = volume("PostgresData", { sizeMB: 1024 });
+const resourceLimits = { containers: { cpu: 1, memoryBytes: 512 * 1024 * 1024 } };
 const postgres = service("Postgres", {
   source: image("postgres:17-alpine", { autoUpdates: { type: "disabled" } }),
   replicas: 1,
@@ -13,7 +14,8 @@ const postgres = service("Postgres", {
     DATABASE_URL: "postgresql://${{Postgres.POSTGRES_USER}}:${{Postgres.POSTGRES_PASSWORD}}@${{Postgres.RAILWAY_PRIVATE_DOMAIN}}:5432/${{Postgres.POSTGRES_DB}}",
   },
   volumeMounts: { "/var/lib/postgresql/data": data },
-  deploy: { sleepApplication: false, restartPolicyType: "ON_FAILURE", restartPolicyMaxRetries: 10 },
+  deploy: { sleepApplication: false, restartPolicyType: "ON_FAILURE", restartPolicyMaxRetries: 10,
+    limitOverride: resourceLimits },
 });
 
 const inputs = Object.fromEntries(
@@ -33,7 +35,8 @@ const common = {
   OPENTAG_LOGIN_NETWORK_THROTTLE_MODE: "direct-peer",
 };
 const deploy = { sleepApplication: false, restartPolicyType: "ON_FAILURE" as const,
-  restartPolicyMaxRetries: 10, drainingSeconds: 30, overlapSeconds: 0 };
+  restartPolicyMaxRetries: 10, drainingSeconds: 30, overlapSeconds: 0,
+  limitOverride: resourceLimits };
 const controlPlane = service("ControlPlane", {
   source: github("amplifthq/opentag-railway", { branch: "main" }),
   build: { builder: "DOCKERFILE", dockerfilePath: "Dockerfile" },

@@ -45,6 +45,10 @@ test("uses three services, one persistent database volume and one shared image b
   assert.equal(api.deploy.healthcheckPath, "/readyz");
   assert.equal(jobs.networking, undefined);
   assert.equal(postgres.networking, undefined);
+  for (const service of [postgres, api, jobs]) {
+    assert.deepEqual(service.deploy.limitOverride,
+      { containers: { cpu: 1, memoryBytes: 512 * 1024 * 1024 } });
+  }
 });
 test("preserves secrets on upgrade and shares runtime authority without owner credentials", () => {
   const [, api, jobs] = definition.resources;
