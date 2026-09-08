@@ -9,29 +9,49 @@ credentials remain on your own Runner.
 
 ## Status
 
-**Scaffold only — the one-click Railway template is not available yet.**
+**Awaiting the first verified image release — one-click deployment is not available yet.**
 
-This repository does not currently contain a deployable configuration or a
-published image reference. A deployment link will be added after the pinned
-OpenTag image and template have been validated in a fresh Railway environment.
+The Railway service definition, protected-variable contract, image-pinning
+command, and tests are implemented. `image.lock.json` explicitly records that
+the first main-branch image has not been published and pinned. Planning a
+deployment fails closed in this state; no fake digest or deploy button is used.
+
+See [Deployment and template registration](DEPLOYMENT.md) for the release gates,
+required Slack inputs, and the first-install procedure. A deployment link will
+be added only after the registered template passes fresh-environment validation.
 
 For the existing self-hosted deployment path, see the
 [OpenTag deployment runbook](https://github.com/amplifthq/opentag/blob/main/docs/control-plane-deployment.md).
 
 ## Deployment scope
 
-The intended template contains three long-running services:
+The service definition contains three long-running services:
 
 | Service | Responsibility |
 | --- | --- |
-| `control-plane` | Slack ingress, Console, Runner coordination, approvals, and evidence |
-| `jobs` | Durable background work, recovery, reconciliation, and retention |
-| `postgres` | Persistent Control Plane state |
+| `ControlPlane` | Slack ingress, Console, Runner coordination, approvals, and evidence |
+| `Jobs` | Durable background work, recovery, reconciliation, and retention |
+| `Postgres` | Persistent Control Plane state, backed by `PostgresData` |
 
-The two application services will use the same pinned OpenTag image with
+The two application services use the same pinned OpenTag image with
 different start commands. Only the Control Plane will have a public HTTPS
 endpoint. Slack authorization and local Runner pairing remain explicit setup
 steps.
+
+## Development checks
+
+Use Node.js 22.14 or newer and the Railway CLI. The Railway SDK is development
+tooling only; it is not added to the OpenTag runtime image.
+
+```sh
+npm ci --ignore-scripts
+npm run typecheck
+npm test
+npm run check:release
+```
+
+`check:release` intentionally fails until a real image receipt has been imported.
+The other checks validate the configuration without creating Railway resources.
 
 ## Repository boundary
 

@@ -1,0 +1,17 @@
+{
+  "name": "opentag-railway",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --experimental-strip-types --test test/*.test.mjs",
+    "typecheck": "tsc --noEmit",
+    "plan": "railway config plan",
+    "pin-image": "node --experimental-strip-types scripts/pin-image.mjs",
+    "check:release": "node --experimental-strip-types --input-type=module -e \"import {readPinnedImage} from './.railway/image.ts'; readPinnedImage();\""
+  },
+  "devDependencies": {
+    "railway": "3.11.0",
+    "typescript": "5.9.3",
+    "@types/node": "22.20.0"
+  }
+}
