@@ -1,0 +1,1 @@
+FROM ghcr.io/amplifthq/opentag-control-plane:sha-c389d85c2ea74d9f9375b2343ea072ff80dfe8c2-34224536100-1@sha256:0e34f3f7f148317e8ea83ff0823d3dc2f621dcc8ec8ac8b153db7bc370d04797

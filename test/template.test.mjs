@@ -15,14 +15,15 @@ test("requires an exact release identity and digest", () => {
     { sourceSha: "main" }, { tag: "latest" }, { platform: "linux/arm64" }, { schemaVersion: 2 }]) {
     assert.throws(() => validateImageReceipt({ ...receipt, ...change }));
   }
+  assert.throws(() => validateImageReceipt({ schemaVersion: 1, status: "awaiting_first_verified_release" }));
 });
-test("unreleased configuration fails closed without a fake Dockerfile", () => {
+test("requires the checked-in Dockerfile and IaC to use a valid release pin", () => {
   const pin = JSON.parse(readFileSync(new URL("../image.lock.json", import.meta.url), "utf8"));
-  if (pin.status === "awaiting_first_verified_release") {
-    assert.throws(() => program(createRailwayContext(), project), /image_release_not_pinned/u);
-  } else {
-    assert.deepEqual(readPinnedImage(), validateImageReceipt(pin));
-  }
+  assert.deepEqual(readPinnedImage(), validateImageReceipt(pin));
+  assert.equal(program(createRailwayContext(), project), definition);
+  const workflow = readFileSync(new URL("../.github/workflows/check.yml", import.meta.url), "utf8");
+  assert.ok(workflow.includes("run: npm run check:release"));
+  assert.ok(!workflow.includes("awaiting_first_verified_release"));
 });
 test("uses three services, one persistent database volume and one shared image build", () => {
   assert.equal(definition.resources.length, 4);

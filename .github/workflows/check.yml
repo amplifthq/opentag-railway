@@ -20,15 +20,5 @@ jobs:
       - run: npm run typecheck
       - run: npm test
       - run: npm audit --audit-level=high
-      - name: Verify the release pin when present
-        run: |
-          node --experimental-strip-types --input-type=module <<'NODE'
-          import { readFileSync } from 'node:fs';
-          import { readPinnedImage } from './.railway/image.ts';
-          const pin = JSON.parse(readFileSync('image.lock.json', 'utf8'));
-          if (pin.status === 'awaiting_first_verified_release') {
-            console.log('Deployment blocked: first verified main image has not been pinned.');
-          } else {
-            readPinnedImage();
-          }
-          NODE
+      - name: Verify the required release pin
+        run: npm run check:release

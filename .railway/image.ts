@@ -17,10 +17,6 @@ export function validateImageReceipt(value: unknown) {
 
 export function readPinnedImage() {
   const value: unknown = JSON.parse(readFileSync(new URL("../image.lock.json", import.meta.url), "utf8"));
-  if (value && typeof value === "object" && "status" in value
-    && value.status === "awaiting_first_verified_release") {
-    throw new Error("image_release_not_pinned: import the successful main publication receipt before deploying");
-  }
   const receipt = validateImageReceipt(value);
   const reference = `${receipt.image}:${receipt.tag}@${receipt.digest}`;
   const dockerfile = readFileSync(new URL("../Dockerfile", import.meta.url), "utf8");

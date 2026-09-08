@@ -9,12 +9,22 @@ credentials remain on your own Runner.
 
 ## Status
 
-**Awaiting the first verified image release — one-click deployment is not available yet.**
+**Public image pinned — Railway deployment validation is still pending.**
 
 The Railway service definition, protected-variable contract, image-pinning
-command, and tests are implemented. `image.lock.json` explicitly records that
-the first main-branch image has not been published and pinned. Planning a
-deployment fails closed in this state; no fake digest or deploy button is used.
+command, and tests are implemented. [image.lock.json](image.lock.json) records
+the exact public image digest and OpenTag source revision; the one-line
+[Dockerfile](Dockerfile) consumes that same immutable reference. CI requires a
+valid pin on every change.
+
+The initial image comes from OpenTag source revision
+[`c389d85c`](https://github.com/amplifthq/opentag/commit/c389d85c2ea74d9f9375b2343ea072ff80dfe8c2).
+Its [main CI](https://github.com/amplifthq/opentag/actions/runs/34223766082) passed.
+The [publication run](https://github.com/amplifthq/opentag/actions/runs/34224536100)
+uploaded the image and retained its receipt, but its final anonymous-pull check
+failed before the package was made public. Public access was subsequently
+verified independently against that same digest; the historical workflow
+failure is not rewritten as a successful run.
 
 See [Deployment and template registration](DEPLOYMENT.md) for the release gates,
 required Slack inputs, and the first-install procedure. A deployment link will
@@ -50,8 +60,9 @@ npm test
 npm run check:release
 ```
 
-`check:release` intentionally fails until a real image receipt has been imported.
-The other checks validate the configuration without creating Railway resources.
+`check:release` validates the required image receipt and its exact Dockerfile
+reference. These checks do not create Railway resources or certify a running
+installation.
 
 ## Repository boundary
 

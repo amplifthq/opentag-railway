@@ -8,13 +8,17 @@ infrastructure changes.
 ## 1. Pin a published OpenTag image
 
 The [main OpenTag repository](https://github.com/amplifthq/opentag) owns image
-builds, migrations, bootstraps, and the container entry point. Merge its image
-release support through the normal review process, then wait for both the
-main CI run and `Publish Control Plane image` to pass.
+builds, migrations, bootstraps, and the container entry point. Require a
+successful main CI run, successful image upload and receipt retention, and
+verified anonymous pull access before pinning a release.
 
 Download `control-plane-image.json` from that publication run's receipt artifact.
 The first GHCR package must be publicly pullable; do not add registry credentials
-to this template.
+to this template. If a publication run failed only its anonymous-pull check
+before the organization made the package public, retain that historical failure
+and independently verify a full anonymous pull of its exact digest after the
+visibility change. This does not waive any failed build, upload, receipt, or
+identity check. The first pin in this repository was verified this way.
 
 ```sh
 npm ci --ignore-scripts
