@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "image": "ghcr.io/amplifthq/opentag-control-plane",
-  "sourceSha": "c389d85c2ea74d9f9375b2343ea072ff80dfe8c2",
-  "digest": "sha256:0e34f3f7f148317e8ea83ff0823d3dc2f621dcc8ec8ac8b153db7bc370d04797",
-  "tag": "sha-c389d85c2ea74d9f9375b2343ea072ff80dfe8c2-34224536100-1",
+  "sourceSha": "3a3136dcb8395b6dda6c872a8398d21a70935a23",
+  "digest": "sha256:33d750d86d7cb4587d2ab9017bc1a1f7020496df11874e4b6447957bfeebe94b",
+  "tag": "sha-3a3136dcb8395b6dda6c872a8398d21a70935a23-34358179169-1",
   "platform": "linux/amd64"
 }
